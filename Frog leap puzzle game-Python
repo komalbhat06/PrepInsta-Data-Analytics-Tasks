@@ -1,0 +1,56 @@
+import random
+
+def display_board(board):
+    print("[ 0 ,  1 ,  2 ,  3 ,  4 ,  5 ,  6 ]")
+    print(board)
+
+def is_valid_move(position, board):
+    return 0 <= position < 7 and board[position] != '-'
+
+def make_move(position, board):
+    if is_valid_move(position, board):
+        empty_leaf = board.index('-')
+        board[position], board[empty_leaf] = board[empty_leaf], board[position]
+        return True
+    else:
+        print("Invalid move! Please enter a valid position.")
+        return False
+
+def generate_random_board():
+    frogs = ['G', 'G', 'G', 'B', 'B', 'B']
+    random.shuffle(frogs)
+    frogs.insert(3, '-')
+    return frogs
+
+def main():
+    board = generate_random_board()
+    moves = 0
+
+    print("Welcome to the Frog Leap Puzzle!")
+    print("Try to switch the positions of green ('G') and brown ('B') frogs.")
+
+    while True:
+        display_board(board)
+        move = input("Enter the position to move (0-6), 'h' for hint, or 'q' to quit: ")
+
+        if move == 'q':
+            print("Quitting the game. Thanks for playing!")
+            break
+        elif move == 'h':
+            # Provide a simple hint by suggesting a valid move
+            hint = random.choice([pos for pos in range(7) if is_valid_move(pos, board)])
+            print(f"Hint: Try moving the frog at position {hint}.")
+        else:
+            try:
+                move = int(move)
+                if make_move(move, board):
+                    moves += 1
+                    if board == ['B', 'B', 'B', '-', 'G', 'G', 'G']:
+                        display_board(board)
+                        print(f"Congratulations! You solved the puzzle in {moves} moves.")
+                        break
+            except ValueError:
+                print("Invalid input! Please enter a valid position, 'h' for hint, or 'q' to quit.")
+
+if __name__ == "__main__":
+    main()
